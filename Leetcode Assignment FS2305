@@ -1,0 +1,94 @@
+class ListNode {
+    int val;
+    ListNode next;
+
+    ListNode() {}
+
+    ListNode(int val) {
+        this.val = val;
+    }
+
+    ListNode(int val, ListNode next) {
+        this.val = val;
+        this.next = next;
+    }
+}
+
+public class AddTwoNumbers {
+
+    public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        // Create a dummy head node for the result linked list.
+        ListNode dummyHead = new ListNode();
+        // The 'current' node will be used to traverse the result linked list.
+        ListNode current = dummyHead;
+        // Initialize carry to 0, which will hold the carry value while adding digits.
+        int carry = 0;
+
+        // Traverse both linked lists while either one is not null or there is a carry value.
+        while (l1 != null || l2 != null || carry != 0) {
+            // Get the values of the current nodes or 0 if the node is null.
+            int x = (l1 != null) ? l1.val : 0;
+            int y = (l2 != null) ? l2.val : 0;
+
+            // Calculate the sum and carry.
+            int sum = x + y + carry;
+            carry = sum / 10;
+            // Create a new node with the sum as the value and add it to the result linked list.
+            current.next = new ListNode(sum % 10);
+
+            // Move to the next nodes in both linked lists if they exist.
+            if (l1 != null) {
+                l1 = l1.next;
+            }
+            if (l2 != null) {
+                l2 = l2.next;
+            }
+
+            // Move to the next node in the result linked list.
+            current = current.next;
+        }
+
+        // Return the next node of the dummy head, which is the start of the result linked list.
+        return dummyHead.next;
+    }
+
+    // Helper method to create a linked list from an array of digits in reverse order.
+    public static ListNode createLinkedList(int[] digits) {
+        ListNode dummyHead = new ListNode();
+        ListNode current = dummyHead;
+        for (int digit : digits) {
+            current.next = new ListNode(digit);
+            current = current.next;
+        }
+        return dummyHead.next;
+    }
+
+    // Helper method to convert the linked list to an array of digits in reverse order.
+    public static int[] linkedListToArray(ListNode head) {
+        int size = 0;
+        ListNode current = head;
+        while (current != null) {
+            size++;
+            current = current.next;
+        }
+
+        int[] result = new int[size];
+        current = head;
+        int index = size - 1;
+        while (current != null) {
+            result[index--] = current.val;
+            current = current.next;
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        // Example: 342 (represented as 2 -> 4 -> 3) + 465 (represented as 5 -> 6 -> 4) = 807 (represented as 7 -> 0 -> 8)
+        ListNode l1 = createLinkedList(new int[]{2, 4, 3});
+        ListNode l2 = createLinkedList(new int[]{5, 6, 4});
+        ListNode resultLinkedList = addTwoNumbers(l1, l2);
+        int[] resultList = linkedListToArray(resultLinkedList);
+        // Output: [7, 0, 8]
+        System.out.println(Arrays.toString(resultList));
+    }
+}
